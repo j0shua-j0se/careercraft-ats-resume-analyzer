@@ -12,13 +12,47 @@ load_dotenv()  # Load all our environment variables
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
+# Model names come and go: the original 'gemini-pro' alias was retired by Google
+# and every request started failing with a 404. Resolve a working model at
+# runtime instead of pinning a name that can disappear underneath a deployment.
+PREFERRED_MODELS = (
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+)
+
+
+@st.cache_resource(show_spinner=False)
+def resolve_model_name():
+    """Pick the first preferred model the API key can actually call."""
+    try:
+        available = {
+            m.name.split("/")[-1]
+            for m in genai.list_models()
+            if "generateContent" in getattr(m, "supported_generation_methods", [])
+        }
+    except Exception:
+        return PREFERRED_MODELS[0]
+
+    for name in PREFERRED_MODELS:
+        if name in available:
+            return name
+    return next(iter(sorted(available)), PREFERRED_MODELS[0])
+
+
 def get_gemini_response(input):
     try:
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel(resolve_model_name())
         response = model.generate_content(input)
         return response.text
     except Exception as e:
-        st.error(f"Error generating response: {e}")
+        st.error(
+            f"Could not generate the analysis: {e}  
+
+"
+            "If this mentions a missing model, the configured Gemini model is "
+            "no longer available for this API key."
+        )
         return None
 
 #Convert PDF content to Text format

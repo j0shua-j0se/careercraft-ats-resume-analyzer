@@ -20,9 +20,11 @@ Built during the **SmartInternz / SmartBridge Generative AI internship**
    single instruction prompt that casts the model as an experienced ATS and
    fixes the response format: match percentage on the first line, missing
    keywords on the second, profile summary in the third section.
-3. **Model call** — `google-generativeai` with `gemini-pro`
-   (`get_gemini_response`), wrapped in error handling that surfaces failures in
-   the UI instead of crashing the app.
+3. **Model call** — `google-generativeai`, wrapped in error handling that
+   surfaces failures in the UI instead of crashing the app. The model name is
+   resolved at runtime (`resolve_model_name`) from a preference list against
+   `genai.list_models()`, because the original pinned `gemini-pro` alias was
+   retired by Google and broke the deployment with a 404.
 4. **Result parsing and display** — the percentage is parsed out of the first
    response line and drawn as a matplotlib doughnut chart next to the full
    text feedback.
@@ -82,8 +84,8 @@ Stated plainly, because they are the interesting part of the project:
   falls back to 0% with a visible error.
 - **PDF-only, text-only** — scanned or image-based résumés extract nothing
   (no OCR), and layout/columns can garble the extracted text.
-- `gemini-pro` and Streamlit's `use_column_width` are both dated; the model name
-  and image API would need updating against current versions.
+- Streamlit's `use_column_width` is deprecated and should be replaced with
+  `use_container_width` when the app is next touched.
 
 ## Possible next steps
 

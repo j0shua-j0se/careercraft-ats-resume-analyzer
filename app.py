@@ -47,11 +47,9 @@ def get_gemini_response(input):
         return response.text
     except Exception as e:
         st.error(
-            f"Could not generate the analysis: {e}  
-
-"
-            "If this mentions a missing model, the configured Gemini model is "
-            "no longer available for this API key."
+            f"Could not generate the analysis: {e}" + "\n\n"
+            "If this mentions a missing model, the configured Gemini model "
+            "is no longer available for this API key."
         )
         return None
 

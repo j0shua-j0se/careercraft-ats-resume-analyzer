@@ -8,7 +8,9 @@ Built during the **SmartInternz / SmartBridge Generative AI internship**
 (Jun–Jul 2024) as a guided project, and deployed publicly.
 
 - **Live app:** https://resume-analyser-q098.onrender.com
-  *(free Render instance — the first request can take ~60 s while it wakes up)*
+  *(free Render instance — the first request can take ~60 s while it wakes up.
+  The hosted instance still runs the pre-fix code and returns a 404 for the
+  retired `gemini-pro` alias; redeploy it from this branch to restore it.)*
 - **Demo video:** https://youtu.be/0x7n1-EovxE
 - **Project report:** [`docs/careercraft-project-report.pdf`](docs/careercraft-project-report.pdf)
 
